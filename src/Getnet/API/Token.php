@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 /**
  * Class Token
  * @package Getnet\API

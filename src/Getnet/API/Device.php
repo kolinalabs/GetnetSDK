@@ -64,6 +64,4 @@ class Device implements \JsonSerializable
 
         return $this;
     }
-
-
 }

@@ -1,5 +1,6 @@
 <?php
 namespace Getnet\API;
+
     /**
      * Created by PhpStorm.
      * User: brunopaz
@@ -178,6 +179,4 @@ class Card implements \JsonSerializable
 
         return $this;
     }
-
-
 }

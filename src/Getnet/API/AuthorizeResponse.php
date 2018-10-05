@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 /**
  * Class AuthorizeResponse
  * @package Getnet\API
@@ -297,7 +296,4 @@ class AuthorizeResponse extends BaseResponse
 
         return $this;
     }
-
 }
-
-

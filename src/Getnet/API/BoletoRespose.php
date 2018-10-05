@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 class BoletoRespose extends BaseResponse
 {
     public $boleto_id;
@@ -241,5 +240,4 @@ class BoletoRespose extends BaseResponse
 
         return $this;
     }
-
 }

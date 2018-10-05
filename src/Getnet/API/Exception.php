@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 /**
  * Class Exception
  * @package Getnet\API
@@ -25,6 +24,4 @@ class Exception extends \ErrorException
     {
         return "[{$this->code}]: {$this->message}\n";
     }
-
-
 }

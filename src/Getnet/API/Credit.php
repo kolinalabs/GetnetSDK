@@ -1,5 +1,6 @@
 <?php
 namespace Getnet\API;
+
     /**
      * Created by PhpStorm.
      * User: brunopaz
@@ -245,6 +246,4 @@ class Credit implements \JsonSerializable
 
         return $this;
     }
-
-
 }

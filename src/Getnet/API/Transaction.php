@@ -1,5 +1,6 @@
 <?php
 namespace Getnet\API;
+
     /**
      * Created by PhpStorm.
      * User: brunopaz
@@ -312,5 +313,4 @@ class Transaction
     {
         $this->seller_id = $seller_id;
     }
-
 }

@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 /**
  * Class BaseResponse
  * @package Getnet\API

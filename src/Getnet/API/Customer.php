@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 /**
  * Class Customer
  * @package Getnet\API
@@ -43,8 +42,8 @@ class Customer implements \JsonSerializable
     public function jsonSerialize()
     {
 
-        $vars = get_object_vars ($this);
-        $vars_clear = array_filter ($vars, function ( $value ) {
+        $vars = get_object_vars($this);
+        $vars_clear = array_filter($vars, function ($value) {
             return null !== $value;
         });
 
@@ -264,6 +263,4 @@ class Customer implements \JsonSerializable
 
         return $this;
     }
-
-
 }

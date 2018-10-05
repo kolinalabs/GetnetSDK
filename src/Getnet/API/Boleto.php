@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 class Boleto implements \JsonSerializable
 {
 
@@ -127,6 +126,4 @@ class Boleto implements \JsonSerializable
 
         return $this;
     }
-
-
 }

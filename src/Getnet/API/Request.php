@@ -30,18 +30,21 @@ class Request
     function __construct(Getnet $credentials)
     {
 
-        if ($credentials->getEnv() == "PRODUCTION")
+        if ($credentials->getEnv() == "PRODUCTION") {
             $this->baseUrl = 'https://api.getnet.com.br';
-        elseif ($credentials->getEnv() == "HOMOLOG")
+        } elseif ($credentials->getEnv() == "HOMOLOG") {
             $this->baseUrl = 'https://api-homologacao.getnet.com.br';
-        elseif ($credentials->getEnv() == "SANDBOX")
+        } elseif ($credentials->getEnv() == "SANDBOX") {
             $this->baseUrl = 'https://api-sandbox.getnet.com.br';
+        }
 
-        if ($credentials->debug == true)
+        if ($credentials->debug == true) {
             print_r($this->baseUrl);
+        }
 
-        if (empty($credentials->getEnv()))
+        if (empty($credentials->getEnv())) {
             return $this->auth($credentials);
+        }
     }
 
 
@@ -61,9 +64,9 @@ class Request
 
         $querystring = http_build_query($params);
 
-        try{
+        try {
             $response = $this->send($credentials, $url_path, 'AUTH', $querystring);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             throw new Exception($e->getMessage(), 100);
         }
 
@@ -79,7 +82,7 @@ class Request
      * @return mixed
      * @throws \Exception
      */
-    private function send(Getnet $credentials, $url_path, $method, $json = NULL)
+    private function send(Getnet $credentials, $url_path, $method, $json = null)
     {
         $curl = curl_init($this->getFullUrl($url_path));
 
@@ -139,7 +142,7 @@ class Request
         }
         if (!$response) {
             print "ERROR";
-            EXIT;
+            exit;
         }
         curl_close($curl);
 
@@ -206,5 +209,4 @@ class Request
     {
         return $this->send($credentials, $url_path, 'PUT', $params);
     }
-
 }

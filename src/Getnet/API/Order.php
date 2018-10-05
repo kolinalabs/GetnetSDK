@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 class Order implements \JsonSerializable
 {
     private $order_id;
@@ -86,5 +85,4 @@ class Order implements \JsonSerializable
 
         return $this;
     }
-
 }

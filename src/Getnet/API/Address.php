@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 class Address implements \JsonSerializable
 {
     private $city;
@@ -186,6 +185,4 @@ class Address implements \JsonSerializable
 
         return $this;
     }
-
-
 }

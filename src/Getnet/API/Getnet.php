@@ -1,5 +1,6 @@
 <?php
 namespace Getnet\API;
+
     /**
      * Created by PhpStorm.
      * User: brunopaz
@@ -17,7 +18,7 @@ class Getnet
     /**
      * @var bool
      */
-    public $debug = true;
+    public $debug = false;
     /**
      * @var Request
      */
@@ -51,8 +52,6 @@ class Getnet
         $request = new Request($this);
 
         return $request->auth($this);
-
-
     }
 
     /**
@@ -143,8 +142,9 @@ class Getnet
             } elseif (property_exists($transaction, "credit")) {
                 $response = $request->post($this, "/v1/payments/credit", $transaction->toJSON());
             }
-            if ($this->debug)
+            if ($this->debug) {
                 print $transaction->toJSON();
+            }
         } catch (\Exception $e) {
 
             $error = new BaseResponse();
@@ -234,8 +234,9 @@ class Getnet
         try {
             $request = new Request($this);
             $response = $request->post($this, "/v1/payments/boleto", $transaction->toJSON());
-            if ($this->debug)
+            if ($this->debug) {
                 print $transaction->toJSON();
+            }
         } catch (\Exception $e) {
 
             $error = new BaseResponse();
@@ -250,4 +251,3 @@ class Getnet
         return $boletoresponse;
     }
 }
-
