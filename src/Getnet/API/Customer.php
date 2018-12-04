@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: brunopaz
@@ -8,18 +9,15 @@
 
 namespace Getnet\API;
 
-
 /**
  * Class Customer
  * @package Getnet\API
  */
 class Customer implements \JsonSerializable
 {
-
-
     /**
      * Customer constructor.
-     * @param $email
+     * @param $id
      */
     public function __construct($id)
     {
@@ -42,9 +40,8 @@ class Customer implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-
-        $vars = get_object_vars ($this);
-        $vars_clear = array_filter ($vars, function ( $value ) {
+        $vars = get_object_vars($this);
+        $vars_clear = array_filter($vars, function ($value) {
             return null !== $value;
         });
 
@@ -56,7 +53,7 @@ class Customer implements \JsonSerializable
      * @param $value
      * @return $this
      */
-    function __set($name, $value)
+    public function __set($name, $value)
     {
         $this->$name = $value;
 
@@ -234,7 +231,6 @@ class Customer implements \JsonSerializable
         return $this->namep;
     }
 
-
     /**
      * @param $name
      * @return $this
@@ -264,6 +260,4 @@ class Customer implements \JsonSerializable
 
         return $this;
     }
-
-
 }

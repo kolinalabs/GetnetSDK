@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: brunopaz
@@ -7,7 +8,6 @@
  */
 
 namespace Getnet\API;
-
 
 /**
  * Class BaseResponse
@@ -19,52 +19,67 @@ class BaseResponse implements \JsonSerializable
      * @var
      */
     public $payment_id;
+
     /**
      * @var
      */
     public $seller_id;
+
     /**
      * @var
      */
     public $amount;
+
     /**
      * @var
      */
     public $currency;
+
     /**
      * @var
      */
     public $order_id;
+
     /**
      * @var
      */
     public $status;
+
     /**
      * @var
      */
     public $received_at;
+
     /**
      * @var
      */
     public $error_message;
+
     /**
      * @var
      */
     public $description;
+
     /**
      * @var
      */
     public $description_detail;
+
     /**
      * @var
      */
     public $status_code;
+
     /**
      * @var
      */
     public $responseJSON;
 
+    /**
+     * @var
+     */
     public $status_label;
+
     /**
      * @return array
      */
@@ -76,7 +91,6 @@ class BaseResponse implements \JsonSerializable
     /**
      * @return mixed
      */
-
     public function getErrorMessage()
     {
         return $this->error_message;
@@ -149,7 +163,6 @@ class BaseResponse implements \JsonSerializable
 
         return $this;
     }
-
 
     /**
      * @return mixed
@@ -236,7 +249,6 @@ class BaseResponse implements \JsonSerializable
      */
     public function getStatus()
     {
-
         if ($this->status_code == 201) {
             $this->status = "AUTHORIZED";
         } elseif ($this->status_code == 202) {
@@ -287,9 +299,7 @@ class BaseResponse implements \JsonSerializable
      */
     public function mapperJson($json)
     {
-
         array_walk_recursive($json, function ($value, $key) {
-
             if (property_exists($this, $key)) {
                 $this->$key = $value;
             }

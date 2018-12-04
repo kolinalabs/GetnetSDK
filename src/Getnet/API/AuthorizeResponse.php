@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: brunopaz
@@ -7,7 +8,6 @@
  */
 
 namespace Getnet\API;
-
 
 /**
  * Class AuthorizeResponse
@@ -19,38 +19,47 @@ class AuthorizeResponse extends BaseResponse
      * @var
      */
     protected $delayed;
+
     /**
      * @var
      */
     protected $authorization_code;
+
     /**
      * @var
      */
     protected $authorized_at;
+
     /**
      * @var
      */
     protected $reason_code;
+
     /**
      * @var
      */
     protected $reason_message;
+
     /**
      * @var
      */
     protected $acquirer;
+
     /**
      * @var
      */
     protected $soft_descriptor;
+
     /**
      * @var
      */
     protected $brand;
+
     /**
      * @var
      */
     protected $terminal_nsu;
+
     /**
      * @var
      */
@@ -297,7 +306,4 @@ class AuthorizeResponse extends BaseResponse
 
         return $this;
     }
-
 }
-
-

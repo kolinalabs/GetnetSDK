@@ -1,12 +1,14 @@
 <?php
+
+/**
+ * Created by PhpStorm.
+ * User: brunopaz
+ * Date: 09/07/2018
+ * Time: 01:26
+ * Documentation https://api.getnet.com.br/v1/doc/api
+ */
+
 namespace Getnet\API;
-    /**
-     * Created by PhpStorm.
-     * User: brunopaz
-     * Date: 09/07/2018
-     * Time: 01:26
-     * Documentation https://api.getnet.com.br/v1/doc/api
-     */
 
 /**
  * Class Getnet
@@ -18,18 +20,22 @@ class Getnet
      * @var bool
      */
     public $debug = false;
+
     /**
      * @var Request
      */
     private $client_id;
+
     /**
      * @var
      */
     private $client_secret;
+
     /**
      * @var
      */
     private $env;
+
     /**
      * @var
      */
@@ -40,8 +46,8 @@ class Getnet
      * @param $client_id
      * @param $client_secret
      * @param $env
+     * @throws \Exception
      */
-
     public function __construct($client_id, $client_secret, $env)
     {
         $this->client_id = $client_id;
@@ -51,8 +57,6 @@ class Getnet
         $request = new Request($this);
 
         return $request->auth($this);
-
-
     }
 
     /**
@@ -72,7 +76,7 @@ class Getnet
     }
 
     /**
-     * @param $this $authorizationToken
+     * @param $authorizationToken
      */
     public function setAuthorizationToken($authorizationToken)
     {
@@ -127,7 +131,6 @@ class Getnet
         $this->env = $env;
     }
 
-
     /**
      * @param Transaction $transaction
      * @return AuthorizeResponse
@@ -135,7 +138,6 @@ class Getnet
     public function Authorize(Transaction $transaction)
     {
         try {
-
             $request = new Request($this);
 
             if (property_exists($transaction, "debit")) {
@@ -143,10 +145,10 @@ class Getnet
             } elseif (property_exists($transaction, "credit")) {
                 $response = $request->post($this, "/v1/payments/credit", $transaction->toJSON());
             }
-            if ($this->debug)
+            if ($this->debug) {
                 print $transaction->toJSON();
+            }
         } catch (\Exception $e) {
-
             $error = new BaseResponse();
             $error->mapperJson(json_decode($e->getMessage(), true));
 
@@ -168,7 +170,6 @@ class Getnet
             $request = new Request($this);
             $response = $request->post($this, "/v1/payments/credit/" . $payment_id . "/confirm", "");
         } catch (\Exception $e) {
-
             $error = new BaseResponse();
             $error->mapperJson(json_decode($e->getMessage(), true));
 
@@ -187,7 +188,6 @@ class Getnet
             $request = new Request($this);
             $response = $request->post($this, "/v1/payments/debit/" . $payment_id . "/authenticated/finalize", json_encode($payer_authentication_response));
         } catch (\Exception $e) {
-
             $error = new BaseResponse();
             $error->mapperJson(json_decode($e->getMessage(), true));
 
@@ -211,9 +211,7 @@ class Getnet
         try {
             $request = new Request($this);
             $response = $request->post($this, "/v1/payments/credit/" . $payment_id . "/cancel", json_encode($amount));
-
         } catch (\Exception $e) {
-
             $error = new BaseResponse();
             $error->mapperJson(json_decode($e->getMessage(), true));
 
@@ -227,27 +225,27 @@ class Getnet
 
     /**
      * @param Transaction $transaction
-     * @return BaseResponse|BoletoRespose
+     * @return BaseResponse|BoletoResponse
      */
     public function Boleto(Transaction $transaction)
     {
         try {
             $request = new Request($this);
             $response = $request->post($this, "/v1/payments/boleto", $transaction->toJSON());
-            if ($this->debug)
+            if ($this->debug) {
                 print $transaction->toJSON();
+            }
         } catch (\Exception $e) {
-
             $error = new BaseResponse();
             $error->mapperJson(json_decode($e->getMessage(), true));
 
             return $error;
         }
-        $boletoresponse = new BoletoRespose();
-        $boletoresponse->mapperJson($response);
-        $boletoresponse->setBaseUrl($request->getBaseUrl());
 
-        return $boletoresponse;
+        $boletoResponse = new BoletoResponse();
+        $boletoResponse->mapperJson($response);
+        $boletoResponse->setBaseUrl($request->getBaseUrl());
+
+        return $boletoResponse;
     }
 }
-

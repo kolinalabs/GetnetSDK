@@ -1,11 +1,14 @@
 <?php
+
+/**
+ * Created by PhpStorm.
+ * User: brunopaz
+ * Date: 09/07/2018
+ * Time: 01:47
+ */
+
 namespace Getnet\API;
-    /**
-     * Created by PhpStorm.
-     * User: brunopaz
-     * Date: 09/07/2018
-     * Time: 01:47
-     */
+
 /**
  * Class Credit
  * @package Getnet\API
@@ -16,34 +19,42 @@ class Credit implements \JsonSerializable
      * @var
      */
     private $authenticated;
+
     /**
      * @var
      */
     private $delayed;
+
     /**
      * @var
      */
     private $dynamic_mcc;
+
     /**
      * @var
      */
     private $number_installments;
+
     /**
      * @var
      */
     private $pre_authorization;
+
     /**
      * @var
      */
     private $save_card_data;
+
     /**
      * @var
      */
     private $soft_descriptor;
+
     /**
      * @var
      */
     private $transaction_type;
+
     /**
      * @var
      */
@@ -245,6 +256,4 @@ class Credit implements \JsonSerializable
 
         return $this;
     }
-
-
 }

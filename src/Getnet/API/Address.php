@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: brunopaz
@@ -8,7 +9,10 @@
 
 namespace Getnet\API;
 
-
+/**
+ * Class Address
+ * @package Getnet\API
+ */
 class Address implements \JsonSerializable
 {
     private $city;
@@ -28,7 +32,6 @@ class Address implements \JsonSerializable
     {
         $this->postal_code = $postal_code;
     }
-
 
     public function jsonSerialize()
     {
@@ -186,6 +189,4 @@ class Address implements \JsonSerializable
 
         return $this;
     }
-
-
 }

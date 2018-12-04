@@ -23,34 +23,41 @@ class Request
      */
     private $baseUrl = '';
 
+    /** @var array */
+    private $environmentUrls = [
+        'PRODUCTION' => 'https://api.getnet.com.br',
+        'HOMOLOG' => 'https://api-homologacao.getnet.com.br',
+        'SANDBOX' => 'https://api-sandbox.getnet.com.br'
+    ];
+
     /**
      * Request constructor.
      * @param Getnet $credentials
+     * @throws Exception
      */
-    function __construct(Getnet $credentials)
+    public function __construct(Getnet $credentials)
     {
+        if (!isset($this->environmentUrls[$credentials->getEnv()])) {
+            throw new \InvalidArgumentException('Ambiente inexistente!');
+        }
 
-        if ($credentials->getEnv() == "PRODUCTION")
-            $this->baseUrl = 'https://api.getnet.com.br';
-        elseif ($credentials->getEnv() == "HOMOLOG")
-            $this->baseUrl = 'https://api-homologacao.getnet.com.br';
-        elseif ($credentials->getEnv() == "SANDBOX")
-            $this->baseUrl = 'https://api-sandbox.getnet.com.br';
+        $this->baseUrl = $this->environmentUrls[$credentials->getEnv()];
 
-        if ($credentials->debug == true)
+        if ($credentials->debug == true) {
             print_r($this->baseUrl);
+        }
 
-        if (empty($credentials->getEnv()))
+        if (empty($credentials->getEnv())) {
             return $this->auth($credentials);
+        }
     }
-
 
     /**
      * @param Getnet $credentials
      * @return Getnet
      * @throws Exception
      */
-    function auth(Getnet $credentials)
+    public function auth(Getnet $credentials)
     {
         $url_path = "/auth/oauth/v2/token";
 
@@ -61,13 +68,14 @@ class Request
 
         $querystring = http_build_query($params);
 
-        try{
+        try {
             $response = $this->send($credentials, $url_path, 'AUTH', $querystring);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             throw new Exception($e->getMessage(), 100);
         }
 
         $credentials->setAuthorizationToken($response["access_token"]);
+
         return $credentials;
     }
 
@@ -79,7 +87,7 @@ class Request
      * @return mixed
      * @throws \Exception
      */
-    private function send(Getnet $credentials, $url_path, $method, $json = NULL)
+    private function send(Getnet $credentials, $url_path, $method, $json = null)
     {
         $curl = curl_init($this->getFullUrl($url_path));
 
@@ -110,7 +118,6 @@ class Request
         curl_setopt_array($curl, $defaultCurlOptions);
 
         if ($credentials->debug === true) {
-
             print "\n\nJSON REQUEST\n";
             print_r($json);
 
@@ -139,7 +146,7 @@ class Request
         }
         if (!$response) {
             print "ERROR";
-            EXIT;
+            exit;
         }
         curl_close($curl);
 
@@ -176,12 +183,11 @@ class Request
      * @return mixed
      * @throws Exception
      */
-    function get(Getnet $credentials, $url_path)
+    public function get(Getnet $credentials, $url_path)
     {
         return $this->send($credentials, $url_path, 'GET');
     }
 
-
     /**
      * @param Getnet $credentials
      * @param $url_path
@@ -189,12 +195,11 @@ class Request
      * @return mixed
      * @throws Exception
      */
-    function post(Getnet $credentials, $url_path, $params)
+    public function post(Getnet $credentials, $url_path, $params)
     {
         return $this->send($credentials, $url_path, 'POST', $params);
     }
 
-
     /**
      * @param Getnet $credentials
      * @param $url_path
@@ -202,9 +207,8 @@ class Request
      * @return mixed
      * @throws Exception
      */
-    function put(Getnet $credentials, $url_path, $params)
+    public function put(Getnet $credentials, $url_path, $params)
     {
         return $this->send($credentials, $url_path, 'PUT', $params);
     }
-
 }

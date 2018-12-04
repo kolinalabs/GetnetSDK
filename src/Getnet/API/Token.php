@@ -8,7 +8,6 @@
 
 namespace Getnet\API;
 
-
 /**
  * Class Token
  * @package Getnet\API
@@ -19,21 +18,23 @@ class Token
      * @var
      */
     public $number_token;
+
     /**
      * @var
      */
     private $card_number;
+
     /**
      * @var
      */
     private $customer_id;
-
 
     /**
      * Token constructor.
      * @param $card_number
      * @param $customer_id
      * @param Getnet $credencial
+     * @throws \Exception
      */
     public function __construct($card_number, $customer_id, Getnet $credencial)
     {
@@ -98,7 +99,11 @@ class Token
         return $this->number_token;
     }
 
-
+    /**
+     * @param Getnet $credencial
+     * @return $this
+     * @throws \Exception
+     */
     public function setNumberToken(Getnet $credencial)
     {
         $data = array("card_number" => $this->card_number, "customer_id" => $this->customer_id);

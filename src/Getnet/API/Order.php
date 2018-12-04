@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: brunopaz
@@ -7,7 +8,6 @@
  */
 
 namespace Getnet\API;
-
 
 class Order implements \JsonSerializable
 {
@@ -86,5 +86,4 @@ class Order implements \JsonSerializable
 
         return $this;
     }
-
 }

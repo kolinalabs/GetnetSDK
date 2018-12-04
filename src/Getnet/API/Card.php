@@ -1,11 +1,13 @@
 <?php
+
+/**
+ * Created by PhpStorm.
+ * User: brunopaz
+ * Date: 09/07/2018
+ * Time: 01:46
+ */
+
 namespace Getnet\API;
-    /**
-     * Created by PhpStorm.
-     * User: brunopaz
-     * Date: 09/07/2018
-     * Time: 01:46
-     */
 
 /**
  * Class Card
@@ -17,27 +19,31 @@ class Card implements \JsonSerializable
      * @var
      */
     private $brand;
+
     /**
      * @var
      */
     private $cardholder_name;
+
     /**
      * @var
      */
     private $expiration_month;
+
     /**
      * @var
      */
     private $expiration_year;
+
     /**
      * @var
      */
     private $number_token;
+
     /**
      * @var
      */
     private $security_code;
-
 
     /**
      * Card constructor.
@@ -48,14 +54,12 @@ class Card implements \JsonSerializable
         $this->setNumberToken($card);
     }
 
-
     /**
      * @return array
      */
 
     public function jsonSerialize()
     {
-
         $vars = get_object_vars($this);
         $vars_clear = array_filter($vars, function ($value) {
             return null !== $value;
@@ -167,7 +171,6 @@ class Card implements \JsonSerializable
         return $this->number_token;
     }
 
-
     /**
      * @param Token $token
      * @return $this
@@ -178,6 +181,4 @@ class Card implements \JsonSerializable
 
         return $this;
     }
-
-
 }

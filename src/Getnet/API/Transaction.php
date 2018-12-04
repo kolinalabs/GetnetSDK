@@ -1,39 +1,44 @@
 <?php
+
+/**
+ * Created by PhpStorm.
+ * User: brunopaz
+ * Date: 09/07/2018
+ * Time: 01:39
+ */
+
 namespace Getnet\API;
-    /**
-     * Created by PhpStorm.
-     * User: brunopaz
-     * Date: 09/07/2018
-     * Time: 01:39
-     */
+
 /**
  * Class Transaction
  * @package Getnet\API
  */
 class Transaction
 {
-
     /**
      * @var
      */
     private $amount;
+
     /**
      * @var
      */
     private $currency;
+
     /**
      * @var
      */
     private $customer;
+
     /**
      * @var
      */
     private $order;
+
     /**
      * @var
      */
     private $seller_id;
-
 
     /**
      * @param $brand
@@ -61,13 +66,11 @@ class Transaction
      */
     public function Debit($brand)
     {
-
         $debit = new Credit($brand);
         $this->setDebit($debit);
 
         return $debit;
     }
-
 
     /**
      * @param mixed $debit
@@ -132,7 +135,6 @@ class Transaction
     public function setShippingAmount($value)
     {
         $this->shipping_amount = $value;
-
     }
 
     /**
@@ -140,9 +142,7 @@ class Transaction
      */
     public function toJSON()
     {
-
         return json_encode(get_object_vars($this), JSON_PRETTY_PRINT);
-
     }
 
     /**
@@ -150,7 +150,7 @@ class Transaction
      * @param $value
      * @return $this
      */
-    function __set($name, $value)
+    public function __set($name, $value)
     {
         $this->$name = $value;
 
@@ -312,5 +312,4 @@ class Transaction
     {
         $this->seller_id = $seller_id;
     }
-
 }

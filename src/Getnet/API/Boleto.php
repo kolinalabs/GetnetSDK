@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: brunopaz
@@ -8,10 +9,12 @@
 
 namespace Getnet\API;
 
-
+/**
+ * Class Boleto
+ * @package Getnet\API
+ */
 class Boleto implements \JsonSerializable
 {
-
     private $our_number;
     private $document_number;
     private $expiration_date;
@@ -27,7 +30,9 @@ class Boleto implements \JsonSerializable
         $this->our_number = $our_number;
     }
 
-
+    /**
+     * @return array|mixed
+     */
     public function jsonSerialize()
     {
         return get_object_vars($this);
@@ -127,6 +132,4 @@ class Boleto implements \JsonSerializable
 
         return $this;
     }
-
-
 }

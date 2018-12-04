@@ -8,6 +8,10 @@
 
 namespace Getnet\API;
 
+/**
+ * Class Device
+ * @package Getnet\API
+ */
 class Device implements \JsonSerializable
 {
     private $device_id;
@@ -22,6 +26,9 @@ class Device implements \JsonSerializable
         $this->device_id = $device_id;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function jsonSerialize()
     {
         return get_object_vars($this);
@@ -64,6 +71,4 @@ class Device implements \JsonSerializable
 
         return $this;
     }
-
-
 }
