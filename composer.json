@@ -12,7 +12,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Getnet\\API\\Tests\\": "tests/"
+      "Tests\\": "tests"
     }
   },
   "license": "MIT",
