@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: brunopaz
- * Date: 09/07/2018
- * Time: 05:52
- */
 
 namespace Getnet\API;
 
-use \Exception;
+use Exception;
+use Getnet\API\Exception\InvalidCredentialsException;
 
 /**
  * Class Request
@@ -23,55 +18,83 @@ class Request
      */
     private $baseUrl = '';
 
+    const CURL_TYPE_AUTH = "AUTH";
+    const CURL_TYPE_POST = "POST";
+    const CURL_TYPE_PUT  = "PUT";
+    const CURL_TYPE_GET  = "GET";
+
     /**
      * Request constructor.
      * @param Getnet $credentials
+     * @throws Exception
      */
-    function __construct(Getnet $credentials)
+    public function __construct(Getnet $credentials)
     {
+        $this->baseUrl = $credentials->getEnvironment()->getApiUrl();
 
-        if ($credentials->getEnv() == "PRODUCTION") {
-            $this->baseUrl = 'https://api.getnet.com.br';
-        } elseif ($credentials->getEnv() == "HOMOLOG") {
-            $this->baseUrl = 'https://api-homologacao.getnet.com.br';
-        } elseif ($credentials->getEnv() == "SANDBOX") {
-            $this->baseUrl = 'https://api-sandbox.getnet.com.br';
-        }
-
-        if ($credentials->debug == true) {
-            print_r($this->baseUrl);
-        }
-
-        if (empty($credentials->getEnv())) {
-            return $this->auth($credentials);
+        if (!$credentials->getAuthorizationToken()) {
+            $this->auth($credentials);
         }
     }
-
 
     /**
      * @param Getnet $credentials
      * @return Getnet
      * @throws Exception
      */
-    function auth(Getnet $credentials)
+    public function auth(Getnet $credentials)
     {
+        if ($this->verifyAuthSession($credentials)) {
+            return $credentials;
+        }
+
         $url_path = "/auth/oauth/v2/token";
 
         $params = [
-            "scope"      => "oob",
+            "scope" => "oob",
             "grant_type" => "client_credentials"
         ];
 
         $querystring = http_build_query($params);
 
         try {
-            $response = $this->send($credentials, $url_path, 'AUTH', $querystring);
+            $response = $this->send($credentials, $url_path, self::CURL_TYPE_AUTH, $querystring);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage(), 100);
+            throw new InvalidCredentialsException();
         }
 
         $credentials->setAuthorizationToken($response["access_token"]);
+
+        //Save auth session
+        if ($credentials->getKeySession()) {
+            $response['generated'] = microtime(true);
+            $_SESSION[$credentials->getKeySession()] = $response;
+        }
+
         return $credentials;
+    }
+
+    /**
+     * start session for use
+     *
+     * @param Getnet $credentials
+     * @return boolean
+     */
+    private function verifyAuthSession(Getnet $credentials)
+    {
+        if ($credentials->getKeySession() && isset($_SESSION[$credentials->getKeySession()]) && $_SESSION[$credentials->getKeySession()]["access_token"]) {
+            $auth = $_SESSION[$credentials->getKeySession()];
+            $now  = microtime(true);
+            $init = $auth["generated"];
+
+            if (($now - $init) < $auth["expires_in"]) {
+                $credentials->setAuthorizationToken($auth["access_token"]);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -80,7 +103,7 @@ class Request
      * @param $method
      * @param null $json
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     private function send(Getnet $credentials, $url_path, $method, $json = null)
     {
@@ -89,22 +112,24 @@ class Request
         $defaultCurlOptions = array(
             CURLOPT_CONNECTTIMEOUT => 60,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT        => 60,
-            CURLOPT_HTTPHEADER     => array('Content-Type: application/json; charset=utf-8'),
+            CURLOPT_TIMEOUT => 60,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json; charset=utf-8'
+            ),
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_SSL_VERIFYPEER => 0
         );
 
-        if ($method == 'POST') {
-            $defaultCurlOptions[ CURLOPT_HTTPHEADER ][] = 'Authorization: Bearer ' . $credentials->getAuthorizationToken();
+        if ($method == self::CURL_TYPE_POST) {
+            $defaultCurlOptions[CURLOPT_HTTPHEADER][] = 'Authorization: Bearer ' . $credentials->getAuthorizationToken();
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-        } elseif ($method == 'PUT') {
-            $defaultCurlOptions[ CURLOPT_HTTPHEADER ][] = 'Authorization: Bearer ' . $credentials->getAuthorizationToken();
-            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+        } elseif ($method == self::CURL_TYPE_PUT) {
+            $defaultCurlOptions[CURLOPT_HTTPHEADER][] = 'Authorization: Bearer ' . $credentials->getAuthorizationToken();
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, self::CURL_TYPE_PUT);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-        } elseif ($method == 'AUTH') {
-            $defaultCurlOptions[ CURLOPT_HTTPHEADER ][0] = 'application/x-www-form-urlencoded';
+        } elseif ($method == self::CURL_TYPE_AUTH) {
+            $defaultCurlOptions[CURLOPT_HTTPHEADER][0] = 'application/x-www-form-urlencoded';
             curl_setopt($curl, CURLOPT_USERPWD, $credentials->getClientId() . ":" . $credentials->getClientSecret());
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
@@ -112,25 +137,10 @@ class Request
         curl_setopt($curl, CURLOPT_ENCODING, "");
         curl_setopt_array($curl, $defaultCurlOptions);
 
-        if ($credentials->debug === true) {
-
-            print "\n\nJSON REQUEST\n";
-            print_r($json);
-
-            $info = curl_getinfo($curl);
-            print_r($info);
-            curl_setopt($curl, CURLOPT_VERBOSE, 1);
-        }
-
         try {
             $response = curl_exec($curl);
         } catch (Exception $e) {
             print "ERROR";
-        }
-        if ($credentials->debug === true) {
-            $info = curl_getinfo($curl);
-            print_r($info);
-            print_r(json_encode(json_decode($response), JSON_PRETTY_PRINT));
         }
 
         if (isset(json_decode($response)->error)) {
@@ -140,9 +150,9 @@ class Request
         if (curl_getinfo($curl, CURLINFO_HTTP_CODE) >= 400) {
             throw new Exception($response, 100);
         }
-        if (!$response) {
+        if (! $response) {
             print "ERROR";
-            exit;
+            exit();
         }
         curl_close($curl);
 
@@ -165,25 +175,23 @@ class Request
     }
 
     /**
-     * @return string
+     * @return mixed|string
      */
     public function getBaseUrl()
     {
         return $this->baseUrl;
     }
 
-
     /**
      * @param Getnet $credentials
      * @param $url_path
      * @return mixed
      * @throws Exception
      */
-    function get(Getnet $credentials, $url_path)
+    public function get(Getnet $credentials, $url_path)
     {
-        return $this->send($credentials, $url_path, 'GET');
+        return $this->send($credentials, $url_path, self::CURL_TYPE_GET);
     }
-
 
     /**
      * @param Getnet $credentials
@@ -192,11 +200,10 @@ class Request
      * @return mixed
      * @throws Exception
      */
-    function post(Getnet $credentials, $url_path, $params)
+    public function post(Getnet $credentials, $url_path, $params)
     {
-        return $this->send($credentials, $url_path, 'POST', $params);
+        return $this->send($credentials, $url_path, self::CURL_TYPE_POST, $params);
     }
-
 
     /**
      * @param Getnet $credentials
@@ -205,8 +212,8 @@ class Request
      * @return mixed
      * @throws Exception
      */
-    function put(Getnet $credentials, $url_path, $params)
+    public function put(Getnet $credentials, $url_path, $params)
     {
-        return $this->send($credentials, $url_path, 'PUT', $params);
+        return $this->send($credentials, $url_path, self::CURL_TYPE_PUT, $params);
     }
 }
