@@ -1,40 +1,48 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: brunopaz
- * Date: 09/07/2018
- * Time: 04:40
- */
 
 namespace Getnet\API;
 
+/**
+ * Class Address
+ *
+ * @package Getnet\API
+ */
 class Address implements \JsonSerializable
 {
+    /** @var */
     private $city;
+
+    /** @var */
     private $complement;
+
+    /** @var */
     private $country;
+
+    /** @var */
     private $district;
+
+    /** @var */
     private $number;
+
+    /** @var */
     private $postal_code;
+
+    /** @var */
     private $state;
+
+    /** @var */
     private $street;
 
     /**
-     * Address constructor.
-     * @param $postal_code
+     * @return array|mixed
      */
-    public function __construct($postal_code)
-    {
-        $this->postal_code = $postal_code;
-    }
-
-
     public function jsonSerialize()
     {
         return get_object_vars($this);
     }
 
     /**
+     *
      * @return mixed
      */
     public function getCity()
@@ -43,17 +51,18 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param mixed $city
-     * @return Address
+     * @param $city
+     * @return $this
      */
     public function setCity($city)
     {
-        $this->city = $city;
+        $this->city = (string)$city;
 
         return $this;
     }
 
     /**
+     *
      * @return mixed
      */
     public function getComplement()
@@ -62,17 +71,18 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param mixed $complement
-     * @return Address
+     * @param $complement
+     * @return $this
      */
     public function setComplement($complement)
     {
-        $this->complement = $complement;
+        $this->complement = (string)$complement;
 
         return $this;
     }
 
     /**
+     *
      * @return mixed
      */
     public function getCountry()
@@ -81,17 +91,18 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param mixed $country
-     * @return Address
+     * @param $country
+     * @return $this
      */
     public function setCountry($country)
     {
-        $this->country = $country;
+        $this->country = (string)$country;
 
         return $this;
     }
 
     /**
+     *
      * @return mixed
      */
     public function getDistrict()
@@ -100,12 +111,12 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param mixed $district
-     * @return Address
+     * @param $district
+     * @return $this
      */
     public function setDistrict($district)
     {
-        $this->district = $district;
+        $this->district = (string)$district;
 
         return $this;
     }
@@ -119,17 +130,18 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param mixed $number
-     * @return Address
+     * @param $number
+     * @return $this
      */
     public function setNumber($number)
     {
-        $this->number = $number;
+        $this->number = (string)$number;
 
         return $this;
     }
 
     /**
+     *
      * @return mixed
      */
     public function getPostalCode()
@@ -138,12 +150,12 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param mixed $postal_code
-     * @return Address
+     * @param $postal_code
+     * @return $this
      */
     public function setPostalCode($postal_code)
     {
-        $this->postal_code = $postal_code;
+        $this->postal_code = (string)$postal_code;
 
         return $this;
     }
@@ -157,12 +169,12 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param mixed $state
-     * @return Address
+     * @param $state
+     * @return $this
      */
     public function setState($state)
     {
-        $this->state = $state;
+        $this->state = (string)$state;
 
         return $this;
     }
@@ -176,12 +188,12 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param mixed $street
-     * @return Address
+     * @param $street
+     * @return $this
      */
     public function setStreet($street)
     {
-        $this->street = $street;
+        $this->street = (string)$street;
 
         return $this;
     }

@@ -1,54 +1,50 @@
 <?php
+
 namespace Getnet\API;
 
-    /**
-     * Created by PhpStorm.
-     * User: brunopaz
-     * Date: 09/07/2018
-     * Time: 01:47
-     */
 /**
  * Class Credit
+ *
  * @package Getnet\API
  */
 class Credit implements \JsonSerializable
 {
-    /**
-     * @var
-     */
+    //Pagamento completo à vista
+    const TRANSACTION_TYPE_FULL = "FULL";
+    //Pagamento parcelado sem juros
+    const TRANSACTION_TYPE_INSTALL_NO_INTEREST = "INSTALL_NO_INTEREST";
+    //Pagamento parcelado com juros
+    const TRANSACTION_TYPE_INSTALL_WITH_INTEREST = "INSTALL_WITH_INTEREST";
+
+    /** @var */
     private $authenticated;
-    /**
-     * @var
-     */
+
+    /** @var */
     private $delayed;
-    /**
-     * @var
-     */
+
+    /** @var */
     private $dynamic_mcc;
-    /**
-     * @var
-     */
+
+    /** @var */
     private $number_installments;
-    /**
-     * @var
-     */
+
+    /** @var */
     private $pre_authorization;
-    /**
-     * @var
-     */
+
+    /** @var */
     private $save_card_data;
-    /**
-     * @var
-     */
+
+    /** @var */
     private $soft_descriptor;
-    /**
-     * @var
-     */
+
+    /** @var */
     private $transaction_type;
-    /**
-     * @var
-     */
+
+    /** @var */
     private $card;
+
+    /** @var */
+    private $cardholder_mobile;
 
     /**
      * Credit constructor.
@@ -60,58 +56,16 @@ class Credit implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return array|mixed
      */
     public function jsonSerialize()
     {
-        return get_object_vars($this);
-    }
+        $vars = get_object_vars($this);
+        $vars_clear = array_filter($vars, function ($value) {
+            return null !== $value;
+        });
 
-    /**
-     * @return mixed
-     */
-    public function getCard()
-    {
-        return $this->card;
-    }
-
-    /**
-     * @param mixed $card
-     */
-    public function setCard($card)
-    {
-        $this->card = $card;
-    }
-
-    /**
-     * @param $card
-     * @return Card
-     */
-    public function Card($card)
-    {
-        $card = new Card($card);
-        $this->card = $card;
-
-        return $card;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTransactionType()
-    {
-        return $this->transaction_type;
-    }
-
-    /**
-     * @param mixed $transaction_type
-     * @return Credit
-     */
-    public function setTransactionType($transaction_type)
-    {
-        $this->transaction_type = $transaction_type;
-
-        return $this;
+        return $vars_clear;
     }
 
     /**
@@ -123,8 +77,8 @@ class Credit implements \JsonSerializable
     }
 
     /**
-     * @param mixed $authenticated
-     * @return Credit
+     * @param $authenticated
+     * @return $this
      */
     public function setAuthenticated($authenticated)
     {
@@ -142,8 +96,8 @@ class Credit implements \JsonSerializable
     }
 
     /**
-     * @param mixed $delayed
-     * @return Credit
+     * @param $delayed
+     * @return $this
      */
     public function setDelayed($delayed)
     {
@@ -161,12 +115,12 @@ class Credit implements \JsonSerializable
     }
 
     /**
-     * @param mixed $dynamic_mcc
-     * @return Credit
+     * @param $dynamic_mcc
+     * @return $this
      */
     public function setDynamicMcc($dynamic_mcc)
     {
-        $this->dynamic_mcc = $dynamic_mcc;
+        $this->dynamic_mcc = (int)$dynamic_mcc;
 
         return $this;
     }
@@ -180,12 +134,12 @@ class Credit implements \JsonSerializable
     }
 
     /**
-     * @param mixed $number_installments
-     * @return Credit
+     * @param $number_installments
+     * @return $this
      */
     public function setNumberInstallments($number_installments)
     {
-        $this->number_installments = $number_installments;
+        $this->number_installments = (int)$number_installments;
 
         return $this;
     }
@@ -199,8 +153,8 @@ class Credit implements \JsonSerializable
     }
 
     /**
-     * @param mixed $pre_authorization
-     * @return Credit
+     * @param $pre_authorization
+     * @return $this
      */
     public function setPreAuthorization($pre_authorization)
     {
@@ -218,8 +172,8 @@ class Credit implements \JsonSerializable
     }
 
     /**
-     * @param mixed $save_card_data
-     * @return Credit
+     * @param $save_card_data
+     * @return $this
      */
     public function setSaveCardData($save_card_data)
     {
@@ -237,12 +191,82 @@ class Credit implements \JsonSerializable
     }
 
     /**
-     * @param mixed $soft_descriptor
-     * @return Credit
+     * @param $soft_descriptor
+     * @return $this
      */
     public function setSoftDescriptor($soft_descriptor)
     {
-        $this->soft_descriptor = $soft_descriptor;
+        $this->soft_descriptor = (string)$soft_descriptor;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransactionType()
+    {
+        return $this->transaction_type;
+    }
+
+    /**
+     * @param $transaction_type
+     * @return $this
+     */
+    public function setTransactionType($transaction_type)
+    {
+        $this->transaction_type = (string)$transaction_type;
+
+        return $this;
+    }
+
+    /**
+     * @param $token
+     * @return Card
+     */
+    public function card($token)
+    {
+        $card = new Card($token);
+
+        $this->setCard($card);
+
+        return $card;
+    }
+
+    /**
+     * @return Card
+     */
+    public function getCard()
+    {
+        return $this->card;
+    }
+
+    /**
+     * @param Card $card
+     * @return $this
+     */
+    public function setCard(Card $card)
+    {
+        $this->card = $card;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCardholderMobile()
+    {
+        return $this->cardholder_mobile;
+    }
+
+    /**
+     * @param $cardholder_mobile
+     * @return $this
+     */
+    public function setCardholderMobile($cardholder_mobile)
+    {
+        $this->cardholder_mobile = (string)$cardholder_mobile;
 
         return $this;
     }

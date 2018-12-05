@@ -1,62 +1,53 @@
 <?php
-namespace Getnet\API;
 
-    /**
-     * Created by PhpStorm.
-     * User: brunopaz
-     * Date: 09/07/2018
-     * Time: 01:46
-     */
+namespace Getnet\API;
 
 /**
  * Class Card
+ *
  * @package Getnet\API
  */
 class Card implements \JsonSerializable
 {
-    /**
-     * @var
-     */
-    private $brand;
-    /**
-     * @var
-     */
-    private $cardholder_name;
-    /**
-     * @var
-     */
-    private $expiration_month;
-    /**
-     * @var
-     */
-    private $expiration_year;
-    /**
-     * @var
-     */
-    private $number_token;
-    /**
-     * @var
-     */
-    private $security_code;
+    const BRAND_MASTERCARD  = "Mastercard";
+    const BRAND_VISA        = "Visa";
+    const BRAND_AMEX        = "Amex";
+    const BRAND_ELO         = "Elo";
+    const BRAND_HIPERCARD   = "Hipercard";
 
+    /** @var */
+    private $brand;
+
+    /** @var */
+    private $cardholder_name;
+
+    /** @var */
+    private $expiration_month;
+
+    /** @var */
+    private $expiration_year;
+
+    /** @var */
+    private $number_token;
+
+    /** @var */
+    private $security_code;
 
     /**
      * Card constructor.
-     * @param Token $card
+     * @param Token $token
      */
-    public function __construct(Token $card)
+    public function __construct(Token $token)
     {
-        $this->setNumberToken($card);
+        $this->setNumberToken($token);
     }
 
-
     /**
+     *
      * @return array
      */
-
     public function jsonSerialize()
     {
-
         $vars = get_object_vars($this);
         $vars_clear = array_filter($vars, function ($value) {
             return null !== $value;
@@ -68,33 +59,14 @@ class Card implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getSecurityCode()
-    {
-        return $this->security_code;
-    }
-
-    /**
-     * @param mixed $security_code
-     * @return Card
-     */
-    public function setSecurityCode($security_code)
-    {
-        $this->security_code = (string)$security_code;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getBrand()
     {
         return $this->brand;
     }
 
     /**
-     * @param mixed $brand
-     * @return Card
+     * @param $brand
+     * @return $this
      */
     public function setBrand($brand)
     {
@@ -112,8 +84,8 @@ class Card implements \JsonSerializable
     }
 
     /**
-     * @param mixed $cardholder_name
-     * @return Card
+     * @param $cardholder_name
+     * @return $this
      */
     public function setCardholderName($cardholder_name)
     {
@@ -131,8 +103,8 @@ class Card implements \JsonSerializable
     }
 
     /**
-     * @param mixed $expiration_month
-     * @return Card
+     * @param $expiration_month
+     * @return $this
      */
     public function setExpirationMonth($expiration_month)
     {
@@ -150,8 +122,8 @@ class Card implements \JsonSerializable
     }
 
     /**
-     * @param mixed $expiration_year
-     * @return Card
+     * @param $expiration_year
+     * @return $this
      */
     public function setExpirationYear($expiration_year)
     {
@@ -168,14 +140,32 @@ class Card implements \JsonSerializable
         return $this->number_token;
     }
 
-
     /**
-     * @param Token $token
+     * @param $token
      * @return $this
      */
-    public function setNumberToken(Token $token)
+    public function setNumberToken($token)
     {
         $this->number_token = (string)$token->getNumberToken();
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSecurityCode()
+    {
+        return $this->security_code;
+    }
+
+    /**
+     * @param $security_code
+     * @return $this
+     */
+    public function setSecurityCode($security_code)
+    {
+        $this->security_code = (string)$security_code;
 
         return $this;
     }

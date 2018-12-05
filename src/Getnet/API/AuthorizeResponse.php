@@ -1,62 +1,51 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: brunopaz
- * Date: 09/07/2018
- * Time: 20:29
- */
 
 namespace Getnet\API;
 
 /**
  * Class AuthorizeResponse
+ *
  * @package Getnet\API
  */
 class AuthorizeResponse extends BaseResponse
 {
-    /**
-     * @var
-     */
+    /** @var */
     protected $delayed;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $authorization_code;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $authorized_at;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $reason_code;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $reason_message;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $acquirer;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $soft_descriptor;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $brand;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $terminal_nsu;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $acquirer_transaction_id;
 
+    /** @var */
     protected $redirect_url;
+
+    /** @var */
     protected $issuer_payment_id;
+
+    /** @var */
     protected $payer_authentication_request;
 
     /**
@@ -68,11 +57,14 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $redirect_url
+     * @param $redirect_url
+     * @return $this
      */
     public function setRedirectUrl($redirect_url)
     {
         $this->redirect_url = $redirect_url;
+
+        return $this;
     }
 
     /**
@@ -84,11 +76,14 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $issuer_payment_id
+     * @param $issuer_payment_id
+     * @return $this
      */
     public function setIssuerPaymentId($issuer_payment_id)
     {
         $this->issuer_payment_id = $issuer_payment_id;
+
+        return $this;
     }
 
     /**
@@ -100,11 +95,14 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $payer_authentication_request
+     * @param $payer_authentication_request
+     * @return $this
      */
     public function setPayerAuthenticationRequest($payer_authentication_request)
     {
         $this->payer_authentication_request = $payer_authentication_request;
+
+        return $this;
     }
 
     /**
@@ -116,8 +114,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $delayed
-     * @return AuthorizeResponse
+     * @param $delayed
+     * @return $this
      */
     public function setDelayed($delayed)
     {
@@ -135,8 +133,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $authorization_code
-     * @return AuthorizeResponse
+     * @param $authorization_code
+     * @return $this
      */
     public function setAuthorizationCode($authorization_code)
     {
@@ -154,8 +152,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $authorized_at
-     * @return AuthorizeResponse
+     * @param $authorized_at
+     * @return $this
      */
     public function setAuthorizedAt($authorized_at)
     {
@@ -173,8 +171,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $reason_code
-     * @return AuthorizeResponse
+     * @param $reason_code
+     * @return $this
      */
     public function setReasonCode($reason_code)
     {
@@ -192,8 +190,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $reason_message
-     * @return AuthorizeResponse
+     * @param $reason_message
+     * @return $this
      */
     public function setReasonMessage($reason_message)
     {
@@ -211,8 +209,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $acquirer
-     * @return AuthorizeResponse
+     * @param $acquirer
+     * @return $this
      */
     public function setAcquirer($acquirer)
     {
@@ -230,8 +228,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $soft_descriptor
-     * @return AuthorizeResponse
+     * @param $soft_descriptor
+     * @return $this
      */
     public function setSoftDescriptor($soft_descriptor)
     {
@@ -249,8 +247,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $brand
-     * @return AuthorizeResponse
+     * @param $brand
+     * @return $this
      */
     public function setBrand($brand)
     {
@@ -268,8 +266,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $terminal_nsu
-     * @return AuthorizeResponse
+     * @param $terminal_nsu
+     * @return $this
      */
     public function setTerminalNsu($terminal_nsu)
     {
@@ -287,8 +285,8 @@ class AuthorizeResponse extends BaseResponse
     }
 
     /**
-     * @param mixed $acquirer_transaction_id
-     * @return AuthorizeResponse
+     * @param $acquirer_transaction_id
+     * @return $this
      */
     public function setAcquirerTransactionId($acquirer_transaction_id)
     {

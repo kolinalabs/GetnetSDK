@@ -1,16 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: brunopaz
- * Date: 09/07/2018
- * Time: 05:29
- */
-
 namespace Getnet\API;
 
+/**
+ * Class Device
+ *
+ * @package Getnet\API
+ */
 class Device implements \JsonSerializable
 {
+    /** @var */
     private $device_id;
+
+    /** @var */
     private $ip_address;
 
     /**
@@ -22,6 +23,9 @@ class Device implements \JsonSerializable
         $this->device_id = $device_id;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function jsonSerialize()
     {
         return get_object_vars($this);
@@ -36,12 +40,12 @@ class Device implements \JsonSerializable
     }
 
     /**
-     * @param mixed $device_id
-     * @return Device
+     * @param $device_id
+     * @return $this
      */
     public function setDeviceId($device_id)
     {
-        $this->device_id = $device_id;
+        $this->device_id = (string)$device_id;
 
         return $this;
     }
@@ -55,12 +59,12 @@ class Device implements \JsonSerializable
     }
 
     /**
-     * @param mixed $ip_address
-     * @return Device
+     * @param $ip_address
+     * @return $this
      */
     public function setIpAddress($ip_address)
     {
-        $this->ip_address = $ip_address;
+        $this->ip_address = (string)$ip_address;
 
         return $this;
     }

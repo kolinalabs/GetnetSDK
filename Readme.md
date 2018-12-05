@@ -4,91 +4,124 @@ E-commerce
 Todos os passos e processos referentes à integração com o sistema de captura e autorização de transações financeiras da Getnet via as funcionalidades da API.
 
  Documentação oficial
-* https://api.getnet.com.br/v1/doc/api
+* https://developers.getnet.com.br/api
 
+### Instalação
 #### Composer
+
+Adicionar no composer.json
 ```
-$ composer require "brunopazz/getnet-sdk @dev"
+"kolinalabs/GetnetSDK": "^1.0.0"
 ```
-#### Exemplo Autorização com cartão de crédito MasterCard R$10,00 em 2x 
+ou execute
+```
+$ composer require kolinalabs/GetnetSDK
+```
+
+### Uso
+#### Exemplo Autorização com cartão de crédito MasterCard R$27,50 em 2x 
 
 ```php
-// Autenticação da API (client_id, client_secret, env)
-$getnet = new Getnet("c076e924-a3fe-492d-a41f-1f8de48fb4b1", "bc097a2f-28e0-43ce-be92-d846253ba748", "SANDBOX");
+use Getnet\API\Getnet;
+use Getnet\API\Transaction;
+use Getnet\API\Environment;
+use Getnet\API\Token;
+use Getnet\API\Credit;
+use Getnet\API\Customer;
+use Getnet\API\Card;
+use Getnet\API\Order;
+use Getnet\API\Boleto;
+
+include 'vendor/autoload.php';
+
+$client_id      = "3a666a8c-6d97-4eb0-a62c-77e3758c3425";
+$client_secret  = "f52a2358-70e6-4baa-b77f-9f0eeb7c8706";
+$seller_id      = "c695b415-6f2e-4475-a221-3c005258a450";
+$environment    = Environment::sandbox();
+
+//Opicional, passar chave se você quiser guardar o token do auth na sessão para não precisar buscar a cada trasação, só quando expira
+$keySession = null;
+
+//Autenticação da API
+$getnet = new Getnet($client_id, $client_secret, $environment, $keySession);
 
 // Inicia uma transação
 $transaction = new Transaction();
 
 // Dados do pedido - Transação
-$transaction->setSellerId("1955a180-2fa5-4b65-8790-2ba4182a94cb");
+$transaction->setSellerId($seller_id);
 $transaction->setCurrency("BRL");
-$transaction->setAmount("1000");
+$transaction->setAmount(27.50);
+
+// Detalhes do Pedido
+$transaction->order("123456")
+->setProductType(Order::PRODUCT_TYPE_SERVICE)
+->setSalesTax(0);
 
 // Gera token do cartão - Obrigatório
-$card = new Token("5155901222280001", "customer_21081826", $getnet);
+$tokenCard = new Token("5155901222280001", "customer_210818263", $getnet);
 
 // Dados do método de pagamento do comprador
-$transaction->Credit("")
-    ->setAuthenticated(false)
-    ->setDynamicMcc("1799")
-    ->setSoftDescriptor("LOJA*TESTE*COMPRA-123")
-    ->setDelayed(false)
-    ->setPreAuthorization(true)
-    ->setNumberInstallments("2")
-    ->setSaveCardData(false)
-    ->setTransactionType("FULL")
-    ->Card($card) 
-        ->setBrand("MasterCard")
-        ->setExpirationMonth("12")
-        ->setExpirationYear("20")
-        ->setCardholderName("Bruno Paz")
-        ->setSecurityCode("123");
+$transaction->credit()
+            ->setAuthenticated(false)
+            ->setDynamicMcc("1799")
+            ->setSoftDescriptor("LOJA*TESTE*COMPRA-123")
+            ->setDelayed(false)
+            ->setPreAuthorization(false)
+            ->setNumberInstallments(2)
+            ->setSaveCardData(false)
+            ->setTransactionType(Credit::TRANSACTION_TYPE_INSTALL_NO_INTEREST)
+            ->card($tokenCard)
+                ->setBrand(Card::BRAND_MASTERCARD)
+                ->setExpirationMonth("12")
+                ->setExpirationYear("20")
+                ->setCardholderName("Jax Teller")
+                ->setSecurityCode("123");
+
 // Dados pessoais do comprador
-$transaction->Customer("customer_21081826")
-    ->setDocumentType("CPF")
-    ->setEmail("customer@email.com.br")
-    ->setFirstName("Bruno")
-    ->setLastName("Paz")
-    ->setName("Bruno Paz")
-    ->setPhoneNumber("5551999887766")
-    ->setDocumentNumber("12345678912")
-    ->BillingAddress("90230060")
-        ->setCity("São Paulo")
-        ->setComplement("Sala 1")
-        ->setCountry("Brasil")
-        ->setDistrict("Centro")
-        ->setNumber("1000")
-        ->setPostalCode("90230060")
-        ->setState("SP")
-        ->setStreet("Av. Brasil");
+$transaction->customer("customer_210818263")
+            ->setDocumentType(Customer::DOCUMENT_TYPE_CPF)
+            ->setEmail("customer@email.com.br")
+            ->setFirstName("Jax")
+            ->setLastName("Teller")
+            ->setName("Jax Teller")
+            ->setPhoneNumber("5551999887766")
+            ->setDocumentNumber("12345678912")
+            ->billingAddress()
+                ->setCity("São Paulo")
+                ->setComplement("Sons of Anarchy")
+                ->setCountry("Brasil")
+                ->setDistrict("Centro")
+                ->setNumber("1000")
+                ->setPostalCode("90230060")
+                ->setState("SP")
+                ->setStreet("Av. Brasil");
+
 // Dados de entrega do pedido
-$transaction->Shippings("")
-    ->setEmail("customer@email.com.br")
-    ->setFirstName("João")
-    ->setName("João da Silva")
-    ->setPhoneNumber("5551999887766")
-    ->ShippingAddress("90230060")
-        ->setCity("Porto Alegre")
-        ->setComplement("Sala 1")
-        ->setCountry("Brasil")
-        ->setDistrict("São Geraldo")
-        ->setNumber("1000")
-        ->setPostalCode("90230060")
-        ->setState("RS")
-        ->setStreet("Av. Brasil");
-// Detalhes do Pedido
-$transaction->Order("123456")
-    ->setProductType("service")
-    ->setSalesTax("0");
-$transaction->setSellerId("1955a180-2fa5-4b65-8790-2ba4182a94cb");
-$transaction->setCurrency("BRL");
-$transaction->setAmount("1000");
+$transaction->shipping()
+            ->setFirstName("Jax")
+            ->setEmail("customer@email.com.br")
+            ->setName("Jax Teller")
+            ->setPhoneNumber("5551999887766")
+            ->setShippingAmount(0)
+            ->address()
+                ->setCity("Porto Alegre")
+                ->setComplement("Sons of Anarchy")
+                ->setCountry("Brasil")
+                ->setDistrict("São Geraldo")
+                ->setNumber("1000")
+                ->setPostalCode("90230060")
+                ->setState("RS")
+                ->setStreet("Av. Brasil");
+
+//Ou pode adicionar entrega com os mesmos dados do customer
+//$transaction->addShippingByCustomer($transaction->getCustomer())->setShippingAmount(0);
 
 // FingerPrint - Antifraude
-$transaction->Device("hash-device-id")->setIpAddress("127.0.0.1");
+$transaction->device("device_id")->setIpAddress("127.0.0.1");
 
 // Processa a Transação
-$response = $getnet->Authorize($transaction);
+$response = $getnet->authorize($transaction);
 
 // Resultado da transação - Consultar tabela abaixo
 $response->getStatus();
@@ -96,11 +129,11 @@ $response->getStatus();
 
 #### CONFIRMA PAGAMENTO (CAPTURA)
 ```php
-// Autenticação da API (client_id, client_secret, env)
-$getnet = new Getnet("c076e924-a3fe-492d-a41f-1f8de48fb4b1", "bc097a2f-28e0-43ce-be92-d846253ba748", "SANDBOX");
+// Autenticação da API
+$getnet = new Getnet($client_id, $client_secret, $environment, $keySession);
 
 // Processa a confirmação da autorização
-$capture = $getnet->AuthorizeConfirm("PAYMENT_ID");
+$capture = $getnet->authorizeConfirm("PAYMENT_ID");
 
 // Resultado da transação - Consultar tabela abaixo
 $capture->getStatus();
@@ -108,50 +141,103 @@ $capture->getStatus();
 
 #### CANCELA PAGAMENTO (CRÉDITO e DÉBITO)
 ```php
-// Autenticação da API (client_id, client_secret, env)
-$getnet = new Getnet("c076e924-a3fe-492d-a41f-1f8de48fb4b1", "bc097a2f-28e0-43ce-be92-d846253ba748", "SANDBOX");
+// Autenticação da API
+$getnet = new Getnet($client_id, $client_secret, $environment, $keySession);
 
-$cancel = $getnet->AuthorizeCancel("[PAYMENT_ID]", [AMOUNT]);
+$cancel = $getnet->authorizeCancel("[PAYMENT_ID]", [AMOUNT]);
 
 // Resultado da transação - Consultar tabela abaixo
 $cancel->getStatus();
 ```
 
+#### CARTÃO DE DÉBITO
+```php
+// Autenticação da API
+$getnet = new Getnet($client_id, $client_secret, $environment, $keySession);
+
+// URL de callback
+$URL_NOTIFY = "http://localhost/url-notify";
+
+//Adicionar dados do Pagamento no lugar do credit ou resto é igual ao cartão de crédito
+$transaction->debit()
+            ->setCardholderMobile("5551999887766")
+            ->setDynamicMcc("1799")
+            ->setSoftDescriptor("LOJA*TESTE*COMPRA-123")
+            ->card($tokenCard)
+                ->setBrand(Card::BRAND_MASTERCARD)
+                ->setExpirationMonth("12")
+                ->setExpirationYear("20")
+                ->setCardholderName("Jax Teller")
+                ->setSecurityCode("123");
+
+$response = $getnet->authorize($transaction);
+```
+
+*Depois de autorizar é preciso redirecionar o cliente para o redirect_url passando uma url de callback
+
+```html
+<form action="<?php echo $response->getRedirectUrl();?>" method="post" target="_blank">
+    <input type="hidden" name="MD"  value="<?php echo $response->getIssuerPaymentId();?>" />
+    <input type="hidden" name="PaReq"  value="<?php echo $response->getPayerAuthenticationRequest();?>" />
+    <input type="hidden" name="TermUrl"  value="<?php echo $URL_NOTIFY;?>" />
+    
+    <input type="submit" value="Authentication Card" />
+</form>
+```
+
+*Depois do cliente finalizar o pagamento e você receber o callback
+
+```php
+//CONFIRMAR O PAGAMENTO COM payer_authentication_response recibo na URL de Noficação
+$response = $getnet->authorizeConfirmDebit($response->getPaymentId(), $payer_authentication_response);
+
+// Resultado da transação - Consultar tabela abaixo
+$response->getStatus();
+```
+
 #### BOLETO BANCÁRIO (SANTANDER)
 
 ```php
-$getnet = new Getnet("c076e924-a3fe-492d-a41f-1f8de48fb4b1", "bc097a2f-28e0-43ce-be92-d846253ba748", "SANDBOX");
+//Autenticação da API
+$getnet = new Getnet($client_id, $client_secret, $environment, $keySession);
+
+//Cria a transação
 $transaction = new Transaction();
-$transaction->setSellerId("1955a180-2fa5-4b65-8790-2ba4182a94cb");
+$transaction->setSellerId($seller_id);
 $transaction->setCurrency("BRL");
-$transaction->setAmount("1000");
+$transaction->setAmount(75.50);
 
-$transaction->Boleto("000001946598")
-    ->setDocumentNumber("170500000019763")
-    ->setExpirationDate("21/11/2018")
-    ->setProvider("santander")
-    ->setInstructions("Não receber após o vencimento");
+//Adicionar dados do Pedido
+$transaction->order("123456")
+->setProductType(Order::PRODUCT_TYPE_SERVICE)
+->setSalesTax(0);
 
-$transaction->Customer()
-    ->setDocumentType("CPF")
-    ->setFirstName("Bruno")
-    ->setName("Bruno Paz")
+$transaction->boleto("000001946598")
+            ->setDocumentNumber("170500000019763")
+            ->setExpirationDate("21/11/2018")
+            ->setProvider(Boleto::PROVIDER_SANTANDER)
+            ->setInstructions("Não receber após o vencimento");
+
+//Adicionar dados do cliente
+$transaction->customer("customer_210818263")
+    ->setDocumentType(Customer::DOCUMENT_TYPE_CPF)
+    ->setEmail("customer@email.com.br")
+    ->setFirstName("Jax")
+    ->setLastName("Teller")
+    ->setName("Jax Teller")
+    ->setPhoneNumber("5551999887766")
     ->setDocumentNumber("12345678912")
-    ->BillingAddress("90230060")
-    ->setCity("São Paulo")
-    ->setComplement("Sala 1")
-    ->setCountry("Brasil")
-    ->setDistrict("Centro")
-    ->setNumber("1000")
-    ->setPostalCode("90230060")
-    ->setState("SP")
-    ->setStreet("Av. Brasil");
+    ->billingAddress()
+        ->setCity("São Paulo")
+        ->setComplement("Sons of Anarchy")
+        ->setCountry("Brasil")
+        ->setDistrict("Centro")
+        ->setNumber("1000")
+        ->setPostalCode("90230060")
+        ->setState("SP")
+        ->setStreet("Av. Brasil");
 
-$transaction->Order("123456")
-    ->setProductType("service")
-    ->setSalesTax("0");
-
-$response = $getnet->Boleto($transaction);
+$response = $getnet->boleto($transaction);
 
 // Resultado da transação - Consultar tabela abaixo
 $response->getStatus();
@@ -196,10 +282,39 @@ $response->getStatus();
 ### Métodos de Pagamento
 |Método|Descrição|
 | ------- | --------- |
-|Authorize|Autoriza uma transação com Pre-Auth ou não|
-|AuthorizeConfirm|Confirma uma autorização de crédito|
-|AuthorizeConfirmDebit|Confirma uma autorização de débito|
-|AuthorizeCancel|Cancela a transação|
-|Boleto|Gera boleto|
+|authorize|Autoriza uma transação com Pre-Auth ou não|
+|authorizeConfirm|Confirma uma autorização de crédito|
+|authorizeConfirmDebit|Confirma uma autorização de débito|
+|authorizeCancel|Cancela a transação|
+|boleto|Gera boleto|
 
+### Segurança
 
+Se você descobrir algum problema relacionado à segurança, envie um e-mail para gian_bine@hotmail.com em vez de usar o issue tracker.
+
+### Changelog
+
+Por favor, veja o [CHANGELOG](CHANGELOG.md) para mais informações sobre o que mudou recentemente.
+
+### Contribuindo
+
+Por favor, veja [CONTRIBUTING](CONTRIBUTING.md) para detalhes.
+
+### Testes
+
+``` bash
+composer test
+```
+
+ou
+
+``` bash
+vendor/bin/phpunit
+```
+
+### Créditos
+
+- [Bruno Paz](https://github.com/brunopazz)
+- [Edson Walter do Nascimento](https://github.com/edson-nascimento)
+- [Gianluca Bine](https://github.com/Pr3d4dor/)
+- [Todos os contribuidores](../../contributors)

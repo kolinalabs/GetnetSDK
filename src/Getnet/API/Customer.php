@@ -1,125 +1,65 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: brunopaz
- * Date: 09/07/2018
- * Time: 04:23
- */
 
 namespace Getnet\API;
 
 /**
  * Class Customer
+ *
  * @package Getnet\API
  */
 class Customer implements \JsonSerializable
 {
+    const DOCUMENT_TYPE_CPF  = "CPF";
+    const DOCUMENT_TYPE_CNPJ = "CNPJ";
 
+    /** @var */
+    private $customer_id;
+
+    /** @var */
+    private $first_name;
+
+    /** @var */
+    private $last_name;
+
+    /** @var */
+    private $name;
+
+    /** @var */
+    private $email;
+
+    /** @var */
+    private $document_type;
+
+    /** @var */
+    private $document_number;
+
+    /** @var */
+    private $phone_number;
+
+    /** @var */
+    private $billing_address;
 
     /**
      * Customer constructor.
-     * @param $email
+     * @param $customer_id
      */
-    public function __construct($id)
+    public function __construct($customer_id)
     {
-        $this->setCustomerId($id);
+        $this->setCustomerId($customer_id);
     }
 
     /**
-     * @param mixed $customer_id
-     * @return Customer
-     */
-    public function setCustomerId($customer_id)
-    {
-        $this->customer_id = $customer_id;
-
-        return $this;
-    }
-
-    /**
-     * @return array
+     * @return array|mixed
      */
     public function jsonSerialize()
     {
-
         $vars = get_object_vars($this);
+
         $vars_clear = array_filter($vars, function ($value) {
             return null !== $value;
         });
 
         return $vars_clear;
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     * @return $this
-     */
-    function __set($name, $value)
-    {
-        $this->$name = $value;
-
-        return $this;
-    }
-
-    /**
-     * @param $id
-     * @return Address
-     */
-    public function BillingAddress($id)
-    {
-        $this->billing_address = new Address($id);
-
-        return $this->billing_address;
-    }
-
-    /**
-     * @param $id
-     * @return Address
-     */
-    public function ShippingAddress($id)
-    {
-        $this->address = new Address($id);
-
-        return $this->address;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
-    }
-
-    /**
-     * @param mixed $customer
-     * @return Customer
-     */
-    public function setCustomer($customer)
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBillingAddress()
-    {
-        return $this->billing_address;
-    }
-
-    /**
-     * @param mixed $billing_address
-     * @return Customer
-     */
-    public function setBillingAddress($billing_address)
-    {
-        $this->billing_address = (string)$billing_address;
-
-        return $this;
     }
 
     /**
@@ -131,58 +71,12 @@ class Customer implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @param $customer_id
+     * @return $this
      */
-    public function getDocumentNumber()
+    public function setCustomerId($customer_id)
     {
-        return $this->document_number;
-    }
-
-    /**
-     * @param mixed $document_number
-     * @return Customer
-     */
-    public function setDocumentNumber($document_number)
-    {
-        $this->document_number = $document_number;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDocumentType()
-    {
-        return $this->document_type;
-    }
-
-    /**
-     * @param mixed $document_type
-     * @return Customer
-     */
-    public function setDocumentType($document_type)
-    {
-        $this->document_type = (string)$document_type;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param mixed $email
-     * @return Customer
-     */
-    public function setEmail($email)
-    {
-        $this->email = (string)$email;
+        $this->customer_id = (string)$customer_id;
 
         return $this;
     }
@@ -196,8 +90,8 @@ class Customer implements \JsonSerializable
     }
 
     /**
-     * @param mixed $first_name
-     * @return Customer
+     * @param $first_name
+     * @return $this
      */
     public function setFirstName($first_name)
     {
@@ -215,8 +109,8 @@ class Customer implements \JsonSerializable
     }
 
     /**
-     * @param mixed $last_name
-     * @return Customer
+     * @param $last_name
+     * @return $this
      */
     public function setLastName($last_name)
     {
@@ -230,9 +124,8 @@ class Customer implements \JsonSerializable
      */
     public function getName()
     {
-        return $this->namep;
+        return $this->name;
     }
-
 
     /**
      * @param $name
@@ -248,18 +141,106 @@ class Customer implements \JsonSerializable
     /**
      * @return mixed
      */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param $email
+     * @return $this
+     */
+    public function setEmail($email)
+    {
+        $this->email = (string)$email;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentType()
+    {
+        return $this->document_type;
+    }
+
+    /**
+     * @param $document_type
+     * @return $this
+     */
+    public function setDocumentType($document_type)
+    {
+        $this->document_type = (string)$document_type;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentNumber()
+    {
+        return $this->document_number;
+    }
+
+    /**
+     * @param $document_number
+     * @return $this
+     */
+    public function setDocumentNumber($document_number)
+    {
+        $this->document_number = (string)$document_number;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPhoneNumber()
     {
         return $this->phone_number;
     }
 
     /**
-     * @param mixed $phone_number
-     * @return Customer
+     * @param $phone_number
+     * @return $this
      */
     public function setPhoneNumber($phone_number)
     {
         $this->phone_number = (string)$phone_number;
+
+        return $this;
+    }
+
+    /**
+     * @return Address
+     */
+    public function billingAddress()
+    {
+        $address = new Address();
+
+        $this->setBillingAddress($address);
+
+        return $address;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBillingAddress()
+    {
+        return $this->billing_address;
+    }
+
+    /**
+     * @param $billing_address
+     * @return $this
+     */
+    public function setBillingAddress($billing_address)
+    {
+        $this->billing_address = $billing_address;
 
         return $this;
     }

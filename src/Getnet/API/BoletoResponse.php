@@ -1,37 +1,70 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: brunopaz
- * Date: 10/07/2018
- * Time: 01:22
- */
 
 namespace Getnet\API;
 
-class BoletoRespose extends BaseResponse
+/**
+ * Class BoletoResponse
+ *
+ * @package Getnet\API
+ */
+class BoletoResponse extends BaseResponse
 {
+    /** @var */
     public $boleto_id;
+
+    /** @var */
     public $bank;
+
+    /** @var */
     public $status_label;
+
+    /** @var */
     public $typeful_line;
+
+    /** @var */
     public $bar_code;
+
+    /** @var */
     public $issue_date;
+
+    /** @var */
     public $expiration_date;
+
+    /** @var */
     public $our_number;
+
+    /** @var */
     public $document_number;
+
+    /** @var */
     public $boleto_pdf;
+
+    /** @var */
     public $boleto_html;
-    /**
-     * @var
-     */
+
+    /** @var */
     private $base_url;
 
     /**
-     * @param mixed $base_url
+     * @param $base_url
+     * @return $this
      */
     public function setBaseUrl($base_url)
     {
         $this->base_url = $base_url;
+
+        return $this;
+    }
+
+    /**
+     * @return void
+     */
+    public function generateLinks()
+    {
+        if ($this->getPaymentId()) {
+            $this->boleto_pdf  = $this->base_url."/v1/payments/boleto/".$this->getPaymentId()."/pdf";
+            $this->boleto_html = $this->base_url."/v1/payments/boleto/".$this->getPaymentId()."/html";
+        }
     }
 
     /**
@@ -39,7 +72,7 @@ class BoletoRespose extends BaseResponse
      */
     public function getBoletoPdf()
     {
-        return $this->boleto_pdf = $this->base_url . "/v1/payments/boleto/" . $this->getPaymentId() . "/pdf";
+        return $this->boleto_pdf;
     }
 
     /**
@@ -47,9 +80,8 @@ class BoletoRespose extends BaseResponse
      */
     public function getBoletoHtml()
     {
-        return $this->boleto_html = $this->base_url . "/v1/payments/boleto/" . $this->getPaymentId() . "/html";
+        return $this->boleto_html;
     }
-
 
     /**
      * @return mixed
@@ -61,7 +93,7 @@ class BoletoRespose extends BaseResponse
 
     /**
      * @param mixed $document_number
-     * @return BoletoRespose
+     * @return BoletoResponse
      */
     public function setDocumentNumber($document_number)
     {
@@ -99,7 +131,7 @@ class BoletoRespose extends BaseResponse
 
     /**
      * @param mixed $boleto_id
-     * @return BoletoRespose
+     * @return BoletoResponse
      */
     public function setBoletoId($boleto_id)
     {
@@ -118,7 +150,7 @@ class BoletoRespose extends BaseResponse
 
     /**
      * @param mixed $bank
-     * @return BoletoRespose
+     * @return BoletoResponse
      */
     public function setBank($bank)
     {
@@ -128,6 +160,7 @@ class BoletoRespose extends BaseResponse
     }
 
     /**
+     *
      * @return mixed
      */
     public function getStatusLabel()
@@ -137,7 +170,7 @@ class BoletoRespose extends BaseResponse
 
     /**
      * @param mixed $status_label
-     * @return BoletoRespose
+     * @return BoletoResponse
      */
     public function setStatusLabel($status_label)
     {
@@ -155,8 +188,8 @@ class BoletoRespose extends BaseResponse
     }
 
     /**
-     * @param mixed $typeful_line
-     * @return BoletoRespose
+     * @param $typeful_line
+     * @return $this
      */
     public function setTypefulLine($typeful_line)
     {
@@ -166,6 +199,7 @@ class BoletoRespose extends BaseResponse
     }
 
     /**
+     *
      * @return mixed
      */
     public function getBarCode()
@@ -174,8 +208,8 @@ class BoletoRespose extends BaseResponse
     }
 
     /**
-     * @param mixed $bar_code
-     * @return BoletoRespose
+     * @param $bar_code
+     * @return $this
      */
     public function setBarCode($bar_code)
     {
@@ -193,8 +227,8 @@ class BoletoRespose extends BaseResponse
     }
 
     /**
-     * @param mixed $issue_date
-     * @return BoletoRespose
+     * @param $issue_date
+     * @return $this
      */
     public function setIssueDate($issue_date)
     {
@@ -212,8 +246,8 @@ class BoletoRespose extends BaseResponse
     }
 
     /**
-     * @param mixed $expiration_date
-     * @return BoletoRespose
+     * @param $expiration_date
+     * @return $this
      */
     public function setExpirationDate($expiration_date)
     {
@@ -231,8 +265,8 @@ class BoletoRespose extends BaseResponse
     }
 
     /**
-     * @param mixed $our_number
-     * @return BoletoRespose
+     * @param $our_number
+     * @return $this
      */
     public function setOurNumber($our_number)
     {

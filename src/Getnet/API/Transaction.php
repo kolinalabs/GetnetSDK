@@ -1,159 +1,213 @@
 <?php
+
 namespace Getnet\API;
 
-    /**
-     * Created by PhpStorm.
-     * User: brunopaz
-     * Date: 09/07/2018
-     * Time: 01:39
-     */
 /**
  * Class Transaction
+ *
  * @package Getnet\API
  */
 class Transaction
 {
+    const STATUS_AUTHORIZED = "AUTHORIZED";
+    const STATUS_CONFIRMED  = "CONFIRMED";
+    const STATUS_PENDING    = "PENDING";
+    const STATUS_APPROVED   = "APPROVED";
+    const STATUS_CANCELED   = "CANCELED";
+    const STATUS_DENIED     = "DENIED";
+    const STATUS_ERROR      = "ERROR";
 
-    /**
-     * @var
-     */
-    private $amount;
-    /**
-     * @var
-     */
-    private $currency;
-    /**
-     * @var
-     */
-    private $customer;
-    /**
-     * @var
-     */
-    private $order;
-    /**
-     * @var
-     */
+    /** @var */
     private $seller_id;
 
+    /** @var */
+    private $amount;
+
+    /** @var string */
+    private $currency = "BRL";
+
+    /** @var */
+    private $order;
+
+    /** @var */
+    private $customer;
+
+    /** @var */
+    private $device;
+
+    /** @var */
+    private $shippings;
+
+    /** @var */
+    private $credit;
+
+    /** @var */
+    private $debit;
+
+    /** @var */
+    private $boleto;
 
     /**
-     * @param $brand
-     * @return Credit
+     * @return false|string
      */
-    public function Credit($brand)
+    public function toJSON()
     {
-        $credit = new Credit($brand);
-        $this->setCredit($credit);
+        $vars = get_object_vars($this);
+        $vars_clear = array_filter($vars, function ($value) {
+            return null !== $value;
+        });
 
-        return $credit;
+        return json_encode($vars_clear, JSON_PRETTY_PRINT);
     }
 
     /**
-     * @param mixed $credit
+     * @return mixed
      */
-    public function setCredit(Credit $credit)
+    public function getSellerId()
     {
-        $this->credit = $credit;
+        return $this->seller_id;
     }
 
     /**
-     * @param $brand
-     * @return Credit
+     * @param $seller_id
+     * @return $this
      */
-    public function Debit($brand)
+    public function setSellerId($seller_id)
     {
+        $this->seller_id = (string)$seller_id;
 
-        $debit = new Credit($brand);
-        $this->setDebit($debit);
-
-        return $debit;
-    }
-
-
-    /**
-     * @param mixed $debit
-     */
-    public function setDebit($debit)
-    {
-        $this->debit = $debit;
+        return $this;
     }
 
     /**
-     * @param $id
+     * @return mixed
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param $amount
+     * @return $this
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = (int)($amount * 100);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param $currency
+     * @return $this
+     */
+    public function setCurrency($currency)
+    {
+        $this->currency = (string)$currency;
+
+        return $this;
+    }
+
+    /**
+     * @param $order_id
+     * @return Order
+     */
+    public function order($order_id)
+    {
+        $order = new Order($order_id);
+        $this->setOrder($order);
+
+        return $order;
+    }
+
+    /**
+     * @return Order
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param Order $order
+     * @return $this
+     */
+    public function setOrder(Order $order)
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * @param null $id
      * @return Customer
      */
-    public function Customer($id = null)
+    public function customer($id = null)
     {
         $customer = new Customer($id);
+
         $this->setCustomer($customer);
 
         return $customer;
     }
 
     /**
-     * @param $id
-     * @return Customer
+     * @return mixed
      */
-    public function Shippings($id)
+    public function getCustomer()
     {
-        $customer = new Customer($id);
-        $customer->setCustomerId(null);
-        $this->shippings[] = $customer;
-
-        return $customer;
+        return $this->customer;
     }
 
     /**
-     * @param $fingerprint
+     * @param Customer $customer
+     * @return $this
+     */
+    public function setCustomer(Customer $customer)
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * @param $device_id
      * @return Device
      */
-    public function Device($fingerprint)
+    public function device($device_id)
     {
-        $device = new Device($fingerprint);
+        $device = new Device($device_id);
+
         $this->device = $device;
 
         return $device;
     }
 
     /**
-     * @param $our_number
-     * @return Boleto
+     * @return Device
      */
-    public function Boleto($our_number)
+    public function getDevice()
     {
-        $boleto = new Boleto($our_number);
-        $this->boleto = $boleto;
-
-        return $boleto;
+        return $this->device;
     }
 
     /**
-     * @param $value
-     */
-    public function setShippingAmount($value)
-    {
-        $this->shipping_amount = $value;
-
-    }
-
-    /**
-     * @return string
-     */
-    public function toJSON()
-    {
-
-        return json_encode(get_object_vars($this), JSON_PRETTY_PRINT);
-
-    }
-
-    /**
-     * @param $name
-     * @param $value
+     * @param Device $device
      * @return $this
      */
-    function __set($name, $value)
+    public function setDevice(Device $device)
     {
-        $this->$name = $value;
+        $this->device = $device;
 
         return $this;
     }
@@ -167,35 +221,95 @@ class Transaction
     }
 
     /**
-     * @param mixed $shippings
+     * @param $shippings
+     * @return $this
      */
     public function setShippings($shippings)
     {
         $this->shippings = $shippings;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return Shipping
      */
-    public function getAmount()
+    public function shipping()
     {
-        return $this->amount;
+        $shipping = new Shipping();
+
+        $this->addShipping($shipping);
+
+        return $shipping;
     }
 
     /**
-     * @param mixed $amount
+     * @param Shipping $shipping
      */
-    public function setAmount($amount)
+    public function addShipping(Shipping $shipping)
     {
-        $this->amount = $amount;
+        if (!is_array($this->shippings)) {
+            $this->shippings = array();
+        }
+
+        $this->shippings[] = $shipping;
     }
 
     /**
-     * @return mixed
+     * @param Customer $customer
+     * @return Shipping
+     */
+    public function addShippingByCustomer(Customer $customer)
+    {
+        $shipping = new Shipping();
+
+        $this->addShipping($shipping->populateByCustomer($customer));
+
+        return $shipping;
+    }
+
+    /**
+     * @param null $brand
+     * @return Credit
+     */
+    public function credit($brand = null)
+    {
+        $credit = new Credit($brand);
+        $this->setCredit($credit);
+
+        return $credit;
+    }
+
+    /**
+     * @return Credit
      */
     public function getCredit()
     {
         return $this->credit;
+    }
+
+    /**
+     * @param Credit $credit
+     * @return $this
+     */
+    public function setCredit(Credit $credit)
+    {
+        $this->credit = $credit;
+
+        return $this;
+    }
+
+    /**
+     * @param $brand
+     * @return Credit
+     */
+    public function debit($brand)
+    {
+        $debit = new Credit($brand);
+
+        $this->setDebit($debit);
+
+        return $debit;
     }
 
     /**
@@ -207,6 +321,29 @@ class Transaction
     }
 
     /**
+     * @param Credit $debit
+     * @return $this
+     */
+    public function setDebit(Credit $debit)
+    {
+        $this->debit = $debit;
+
+        return $this;
+    }
+
+    /**
+     * @param $our_number
+     * @return Boleto
+     */
+    public function boleto($our_number)
+    {
+        $boleto = new Boleto($our_number);
+        $this->boleto = $boleto;
+
+        return $boleto;
+    }
+
+    /**
      * @return mixed
      */
     public function getBoleto()
@@ -215,102 +352,13 @@ class Transaction
     }
 
     /**
-     * @param mixed $boleto
+     * @param Boleto $boleto
+     * @return $this
      */
-    public function setBoleto($boleto)
+    public function setBoleto(Boleto $boleto)
     {
         $this->boleto = $boleto;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getCurrency()
-    {
-        return $this->currency;
-    }
-
-    /**
-     * @param mixed $currency
-     */
-    public function setCurrency($currency)
-    {
-        $this->currency = $currency;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
-    }
-
-    /**
-     * @param mixed $customer
-     */
-    public function setCustomer(Customer $customer)
-    {
-        $this->customer = $customer;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDevice()
-    {
-        return $this->device;
-    }
-
-    /**
-     * @param mixed $device
-     */
-    public function setDevice($device)
-    {
-        $this->device = $device;
-    }
-
-    /**
-     * @param $order_id
-     * @return Order
-     */
-    public function Order($order_id)
-    {
-        $order = new Order($order_id);
-        $this->setOrder($order);
-
-        return $order;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrder()
-    {
-        return $this->order;
-    }
-
-    /**
-     * @param mixed $order
-     */
-    public function setOrder(Order $order)
-    {
-        $this->order = $order;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSellerId()
-    {
-        return $this->seller_id;
-    }
-
-    /**
-     * @param mixed $seller_id
-     */
-    public function setSellerId($seller_id)
-    {
-        $this->seller_id = $seller_id;
+        return $this;
     }
 }
