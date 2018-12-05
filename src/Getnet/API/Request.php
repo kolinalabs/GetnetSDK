@@ -100,7 +100,7 @@ class Request
     /**
      * @param Getnet $credentials
      * @param $url_path
-     * @param $method
+     * @param string $method
      * @param null $json
      * @return mixed
      * @throws Exception
@@ -175,7 +175,7 @@ class Request
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getBaseUrl()
     {
@@ -195,8 +195,8 @@ class Request
 
     /**
      * @param Getnet $credentials
-     * @param $url_path
-     * @param $params
+     * @param string $url_path
+     * @param false|string $params
      * @return mixed
      * @throws Exception
      */

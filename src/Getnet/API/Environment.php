@@ -15,7 +15,7 @@ class Environment
 
     /**
      * Environment constructor.
-     * @param $api
+     * @param string $api
      */
     private function __construct($api)
     {
