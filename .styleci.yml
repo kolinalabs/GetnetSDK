@@ -1,4 +1,4 @@
-preset: PSR2
+preset: symfony
 
 disabled:
   - single_class_element_per_statement
