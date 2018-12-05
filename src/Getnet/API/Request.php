@@ -9,6 +9,8 @@
 namespace Getnet\API;
 
 use \Exception;
+use Getnet\API\Exception\InvalidCredentialsException;
+use Getnet\API\Exception\InvalidEnvironmentException;
 
 /**
  * Class Request
@@ -38,7 +40,7 @@ class Request
     public function __construct(Getnet $credentials)
     {
         if (!isset($this->environmentUrls[$credentials->getEnv()])) {
-            throw new \InvalidArgumentException('Ambiente inexistente!');
+            throw new InvalidEnvironmentException('Ambiente inexistente!');
         }
 
         $this->baseUrl = $this->environmentUrls[$credentials->getEnv()];
@@ -71,7 +73,7 @@ class Request
         try {
             $response = $this->send($credentials, $url_path, 'AUTH', $querystring);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage(), 100);
+            throw new InvalidCredentialsException($e->getMessage());
         }
 
         $credentials->setAuthorizationToken($response["access_token"]);
