@@ -53,7 +53,7 @@ class Getnet
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getClientId()
     {
@@ -72,7 +72,7 @@ class Getnet
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getClientSecret()
     {
@@ -110,7 +110,7 @@ class Getnet
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getAuthorizationToken()
     {
@@ -129,7 +129,7 @@ class Getnet
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getKeySession()
     {

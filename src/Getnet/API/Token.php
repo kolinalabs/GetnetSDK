@@ -42,7 +42,7 @@ class Token
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCardNumber()
     {
@@ -61,7 +61,7 @@ class Token
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCustomerId()
     {
