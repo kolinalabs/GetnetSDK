@@ -1,2 +1,6 @@
 /vendor/
+<<<<<<< HEAD
 .idea
+/build/
+.buildpath
+composer.lock
