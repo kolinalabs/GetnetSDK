@@ -1,4 +1,6 @@
 ### GETNET SDK PHP - API v1
+[![Build Status](https://travis-ci.org/kolinalabs/GetnetSDK.svg?branch=master)](https://travis-ci.org/kolinalabs/GetnetSDK)
+
 E-commerce
 
 Todos os passos e processos referentes à integração com o sistema de captura e autorização de transações financeiras da Getnet via as funcionalidades da API.
