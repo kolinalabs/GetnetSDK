@@ -10,8 +10,8 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="GetnetSDK Test Suite">
-            <directory>tests</directory>
+        <testsuite name="GetnetSDK Functional Tests">
+            <directory>tests/Functional</directory>
         </testsuite>
     </testsuites>
     <filter>
