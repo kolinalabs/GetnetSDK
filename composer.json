@@ -1,5 +1,5 @@
 {
-  "name": "kolinalabs/GetnetSDK",
+  "name": "kolinalabs/getnet-sdk",
   "description": "SDK da plataforma digital da GETNET",
   "minimum-stability": "stable",
   "license": "Apache-2.0",
