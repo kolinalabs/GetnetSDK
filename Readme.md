@@ -14,11 +14,11 @@ Todos os passos e processos referentes à integração com o sistema de captura 
 
 Adicionar no composer.json
 ```
-"kolinalabs/GetnetSDK": "^1.0.0"
+"kolinalabs/getnet-sdk": "^1.0.0"
 ```
 ou execute
 ```
-$ composer require kolinalabs/GetnetSDK
+$ composer require kolinalabs/getnet-sdk
 ```
 
 ### Uso
