@@ -300,10 +300,10 @@ class Transaction
     }
 
     /**
-     * @param $brand
+     * @param null $brand
      * @return Credit
      */
-    public function debit($brand)
+    public function debit($brand = null)
     {
         $debit = new Credit($brand);
 
