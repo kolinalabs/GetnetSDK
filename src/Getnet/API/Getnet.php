@@ -203,7 +203,7 @@ class Getnet
     public function authorizeConfirmDebit($payment_id, $payer_authentication_response)
     {
         try {
-            $payer_authentication_response = array("payer_authentication_response" => $payer_authentication_response);
+            $payer_authentication_response = ["payer_authentication_response" => $payer_authentication_response];
             $request = new Request($this);
             $response = $request->post($this, "/v1/payments/debit/".$payment_id."/authenticated/finalize", json_encode($payer_authentication_response));
         } catch (\Exception $e) {
@@ -226,7 +226,7 @@ class Getnet
      */
     public function authorizeCancel($payment_id, $amount_val)
     {
-        $amount = array("amount" => $amount_val);
+        $amount = ["amount" => $amount_val];
 
         try {
             $request = new Request($this);
@@ -266,5 +266,23 @@ class Getnet
         $boletoresponse->generateLinks();
 
         return $boletoresponse;
+    }
+
+    public function verifyCard(Card $card)
+    {
+        try {
+            $request = new Request($this);
+            $response = $request->post($this, "/v1/cards/verification", $card->toJSON());
+        } catch (\Exception $e) {
+            $error = new BaseResponse();
+            $error->mapperJson(json_decode($e->getMessage(), true));
+
+            return $error;
+        }
+
+        $cardVerificationResponse = new CardVerificationResponse();
+        $cardVerificationResponse->mapperJson($response);
+
+        return $cardVerificationResponse;
     }
 }
