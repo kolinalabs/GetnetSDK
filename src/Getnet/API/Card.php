@@ -169,4 +169,17 @@ class Card implements \JsonSerializable
 
         return $this;
     }
+
+    /**
+     * @return false|string
+     */
+    public function toJSON()
+    {
+        $vars = get_object_vars($this);
+        $vars_clear = array_filter($vars, function ($value) {
+            return null !== $value;
+        });
+
+        return json_encode($vars_clear, JSON_PRETTY_PRINT);
+    }
 }
