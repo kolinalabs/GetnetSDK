@@ -268,6 +268,10 @@ class Getnet
         return $boletoresponse;
     }
 
+    /**
+     * @param Card $card
+     * @return BaseResponse|CardVerificationResponse
+     */
     public function verifyCard(Card $card)
     {
         try {
