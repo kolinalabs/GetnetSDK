@@ -14,9 +14,9 @@ Todos os passos e processos referentes à integração com o sistema de captura 
 
 Adicionar no composer.json
 ```
-"kolinalabs/getnet-sdk": "^1.0.0"
+"kolinalabs/getnet-sdk": "1.*"
 ```
-ou execute
+ou executar
 ```
 $ composer require kolinalabs/getnet-sdk
 ```
@@ -246,6 +246,26 @@ $response = $getnet->boleto($transaction);
 $response->getStatus();
 ```
 
+### VERIFICAÇÃO DE CARTÃO (CRÉDITO)
+```php
+//Autenticação da API
+$getnet = new Getnet($client_id, $client_secret, $environment, $keySession);
+
+//Cria a transação de crédito
+...
+$transaction = new Transaction();
+$transaction->setSellerId($seller_id);
+$transaction->setCurrency("BRL");
+$transaction->setAmount(75.50);
+....
+
+$card = $transaction->getCredit()->getCard();
+
+// Resultado da transação - Consultar tabela abaixo
+$response = $getnet->verifyCard($card);
+```
+
+
 ### Possíveis status de resposta de uma transação
 |Status|Descrição|
 | ------- | --------- |
@@ -290,6 +310,12 @@ $response->getStatus();
 |authorizeConfirmDebit|Confirma uma autorização de débito|
 |authorizeCancel|Cancela a transação|
 |boleto|Gera boleto|
+
+### Validação de Cartão
+
+|Método|Descrição|
+| ------- | --------- |
+|verifyCard|Verificar se o cartão de crédito informado pelo portador é um cartão válido. Entende-se como um cartão crédito válido um cartão que não está cancelado, bloqueado ou com restrições. A verificação de cartão está disponível somente para as bandeiras Mastercard e Visa.|
 
 ### Segurança
 
