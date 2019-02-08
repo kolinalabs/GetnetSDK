@@ -249,7 +249,7 @@ class Transaction
     public function addShipping(Shipping $shipping)
     {
         if (!is_array($this->shippings)) {
-            $this->shippings = array();
+            $this->shippings = [];
         }
 
         $this->shippings[] = $shipping;

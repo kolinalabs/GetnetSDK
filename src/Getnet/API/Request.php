@@ -109,16 +109,16 @@ class Request
     {
         $curl = curl_init($this->getFullUrl($url_path));
 
-        $defaultCurlOptions = array(
+        $defaultCurlOptions = [
             CURLOPT_CONNECTTIMEOUT => 60,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 60,
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json; charset=utf-8'
-            ),
+            ],
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_SSL_VERIFYPEER => 0
-        );
+        ];
 
         if ($method == self::CURL_TYPE_POST) {
             $defaultCurlOptions[CURLOPT_HTTPHEADER][] = 'Authorization: Bearer ' . $credentials->getAuthorizationToken();

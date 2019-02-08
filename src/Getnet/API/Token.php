@@ -94,7 +94,7 @@ class Token
      */
     public function setNumberToken(Getnet $credencial)
     {
-        $data = array("card_number" => $this->card_number,"customer_id" => $this->customer_id);
+        $data = ["card_number" => $this->card_number,"customer_id" => $this->customer_id];
 
         $request = new Request($credencial);
         $response = $request->post($credencial, "/v1/tokens/card", json_encode($data));

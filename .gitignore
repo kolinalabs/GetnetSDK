@@ -3,3 +3,4 @@
 /build/
 .buildpath
 composer.lock
+.php_cs.cache
